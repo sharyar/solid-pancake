@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# JSON File to avoid adding personal data of users
+/src/timeline.json
