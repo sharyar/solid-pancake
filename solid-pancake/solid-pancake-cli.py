@@ -15,10 +15,13 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import sys
+import os
 import time
 import nltk
 from nltk.corpus import stopwords
 import twitter_helper_functions
+from dotenv import load_dotenv
+import twitter
 
 nltk.download('stopwords')
 stopwords.words('english')
@@ -29,6 +32,7 @@ TWITTER_DF_FILEPATH = '../twitter.csv'
 NLP_model = None
 twitter_id = None
 retrieved_tweets = None
+twitter_api = None
 
 WELCOME_MESSAGE = '''
 Welcome to Solid-Pancake - A Twitter Sentiment Analysis Program
@@ -91,13 +95,32 @@ def admin_panel():
             break
 
 
+def initialize_twitter_api():
+    load_dotenv()
+    try:
+        CONSUMER_KEY = os.getenv('CONSUMER_KEY')
+        CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
+        ACCESS_TOKEN_KEY = os.getenv('ACCESS_TOKEN_KEY')
+        ACCESS_TOKEN_SECRET = os.getenv('ACCESS_TOKEN_SECRET')
+    except Exception as e:
+        print('This exception occurred', e)
+
+    else:
+        twitter_api_ = twitter.Api(consumer_key=CONSUMER_KEY,
+                                   consumer_secret=CONSUMER_SECRET,
+                                   access_token_key=ACCESS_TOKEN_KEY,
+                                   access_token_secret=ACCESS_TOKEN_SECRET)
+
+        return twitter_api_
+
+
 if __name__ == '__main__':
+    twitter_api = initialize_twitter_api()
     while True:
         starting_option = str(input(WELCOME_MESSAGE))
-
         if starting_option == '1':
             twitter_id = str(input('Provide your user id below with @ symbol (i.e @sharyar) :\n'))
-            retrieved_tweets = twitter_helper_functions.get_tweets(twitter_id)
+            retrieved_tweets = twitter_helper_functions.get_tweets(api=twitter_api, screen_name=twitter_id)
             retrieved_tweets = twitter_helper_functions.convert_tweets_to_list(retrieved_tweets)
         elif starting_option == '2':
             admin_panel()
