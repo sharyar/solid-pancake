@@ -131,3 +131,7 @@ dmypy.json
 
 # JSON File to avoid adding personal data of users
 /src/timeline.json
+
+.pickle
+.joblib
+.csv
