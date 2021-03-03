@@ -19,8 +19,18 @@ A small app that does sentiment analysis on a user's Twitter feed.
 3. Navigate into the repo folder from your terminal ("cd solid-pancake").
 4. Install dependencies and create a new environment by using: "conda env create -f environment.yml"
 5. Activate the new environment
-6. Run the application: "python solid-pancake/solid_pancake_cli.py"
-7. Select option 2 to go to admin panel. Select option 3 to load the pre-trained models. 
-8. Select option 1 and enter your twitter id. This will fetch your tweets. 
-9. Select option 3 to see a Wordcloud of your tweets
-10. Select option 4 to see a pie chart of your positive and negative tweets. 
+6. You will need to create a .env file in the project root directory with your twitter API keys or replace the values within the initialize_twitter_api under the solid_pancake_cli.py. 
+7. Run the application: "python solid-pancake/solid_pancake_cli.py"
+8. Select option 2 to go to admin panel. Select option 3 to load the pre-trained models. 
+9. Select option 1 and enter your twitter id. This will fetch your tweets. 
+10. Select option 3 to see a Wordcloud of your tweets
+11. Select option 4 to see a pie chart of your positive and negative tweets. 
+
+
+### .end File Details:
+
+The .env file should have the following lines. Replace the XXXXX with your own keys:
+CONSUMER_KEY = 'XXXX'
+CONSUMER_SECRET = 'XXXX'
+ACCESS_TOKEN_KEY = 'XXXX'
+ACCESS_TOKEN_SECRET = 'XXXX'
