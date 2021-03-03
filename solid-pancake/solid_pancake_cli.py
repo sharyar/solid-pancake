@@ -11,9 +11,6 @@
 
 # Import libraries needed:
 import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 import sys
 import os
 import time
@@ -44,7 +41,8 @@ By: Sharyar Memon
 Please select from one of the following options:
 1. Do sentiment analysis on your tweets!
 2. Admin Access
-3. Learn More about the app!
+3. Display Word Cloud
+4. Run model on saved tweets! 
 Q. Exit
 '''
 
@@ -80,19 +78,20 @@ ABOUT_MESSAGE = '''
 
 
 def admin_panel():
-    while True:
-        user_option_ = str(input(ADMIN_MESSAGE))
-        if user_option_ == '1':
-            tweets_df = pd.read_csv(TWITTER_DF_FILEPATH, header=0, index_col=0, engine='c')
-            NLP_model = twitter_helper_functions.train_and_save_model(tweets_df['tweet'], tweets_df['label'])
-        elif user_option_ == '2':
-            twitter_df_path = input('Provide a path to the new training data set')
-            tweets_df = pd.read_csv(twitter_df_path, header=0, index_col=0, engine='c')
-            NLP_model = twitter_helper_functions.train_and_save_model(tweets_df['tweet'], tweets_df['label'])
-        elif user_option_ == '3':
-            NLP_model = twitter_helper_functions.load_model()
-        elif user_option_.lower() == 'q':
-            break
+    user_option_ = str(input(ADMIN_MESSAGE))
+    nlp_model_ = None
+    if user_option_ == '1':
+        tweets_df = pd.read_csv(TWITTER_DF_FILEPATH, header=0, index_col=0, engine='c')
+        nlp_model_ = twitter_helper_functions.train_and_save_model(tweets_df['tweet'], tweets_df['label'])
+    elif user_option_ == '2':
+        twitter_df_path = input('Provide a path to the new training data set')
+        tweets_df = pd.read_csv(twitter_df_path, header=0, index_col=0, engine='c')
+        nlp_model_ = twitter_helper_functions.train_and_save_model(tweets_df['tweet'], tweets_df['label'])
+    elif user_option_ == '3':
+        nlp_model_ = twitter_helper_functions.load_model()
+
+    return nlp_model_
+
 
 
 def initialize_twitter_api():
@@ -123,9 +122,11 @@ if __name__ == '__main__':
             retrieved_tweets = twitter_helper_functions.get_tweets(api=twitter_api, screen_name=twitter_id)
             retrieved_tweets = twitter_helper_functions.convert_tweets_to_list(retrieved_tweets)
         elif starting_option == '2':
-            admin_panel()
+            NLP_model = admin_panel()
         elif starting_option == '3':
             twitter_helper_functions.generate_word_cloud(retrieved_tweets, stopwords=stopwords.words('english'))
+        elif starting_option == '4':
+            twitter_helper_functions.analyze_and_visualize_tweets(retrieved_tweets, NLP_model)
         elif starting_option.lower() == 'q':
             print(EXIT_MESSAGE)
             time.sleep(3)

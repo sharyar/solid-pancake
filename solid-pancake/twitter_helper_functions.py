@@ -1,5 +1,4 @@
-import twitter
-from dotenv import load_dotenv  # used to load api keys via env file
+
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 import string
@@ -180,3 +179,22 @@ def load_model():
     """
     nb_classifier = load(NB_MODEL_FILE)
     return nb_classifier
+
+
+def analyze_and_visualize_tweets(tweets, nlp_model):
+    # Run model on tweets. Return the array with counts of positive/negative labels
+    # Vectorize tweets
+    # Run model
+    # Visualize results
+    vectorized_tweets = vectorize_tweets(tweets)
+    labels = nlp_model.predict(vectorized_tweets)
+    positive_tweets = np.count_nonzero(labels == 0)
+    negative_tweets = np.count_nonzero(labels == 1)
+
+    print(f'Total Tweets: {len(tweets)}\nPositive Tweets: {positive_tweets}\n\
+Negative Tweets:{negative_tweets}')
+
+    plt.pie(x=[positive_tweets,negative_tweets], labels=['Positive Tweets', 'Negative Tweets'], shadow=False,
+            autopct='%1.1f%%', explode=(0, 0.1))
+    plt.show()
+
