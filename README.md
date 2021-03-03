@@ -3,14 +3,14 @@ A small app that does sentiment analysis on a user's Twitter feed.
 
 ## Current Road Map: 
 
--[x] Get Twitter API Working 
--[x] Train Simple Gaussian Naive Bayes Model to Classify Tweets into Positive vs Negative
--[x] Display a word cloud of user's tweets
--[x] Build a command line application that is able to query a user's Twitter feed, display the word cloud and do simple sentiment analysis.
--[ ] Implement tests to ensure consistent ongoing functionality with changes
--[ ] Build Django based site to move from command line to a Web App
--[ ] Build a more complex NLP Model to do further sentiment analysis
--[ ] Query based on Hashtag
+* Get Twitter API Working - COMPLETED
+* Train Simple Gaussian Naive Bayes Model to Classify Tweets into Positive vs Negative - COMPLETED
+* Display a word cloud of user's tweets - COMPLETED
+* Build a command line application that is able to query a user's Twitter feed, display the word cloud and do simple sentiment analysis. - COMPLETED
+* Implement tests to ensure consistent ongoing functionality with changes
+* Build Django based site to move from command line to a Web App
+* Build a more complex NLP Model to do further sentiment analysis
+* Query based on Hashtag
 
 ## How to use Command Line Version:
 
