@@ -1,5 +1,4 @@
-import twitter
-from dotenv import load_dotenv  # used to load api keys via env file
+
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 import string
@@ -9,7 +8,6 @@ from sklearn.naive_bayes import MultinomialNB
 import pickle
 from joblib import dump, load
 import numpy as np
-import seaborn as sns
 
 # Some of the functions are based on coursera project:
 # https://www.coursera.org/learn/twitter-sentiment-analysis/home/welcome
