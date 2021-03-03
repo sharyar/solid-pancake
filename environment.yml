@@ -1,0 +1,13 @@
+name: solid-pan-env
+channels:
+  - defaults
+dependencies:
+  - django
+  - wordcloud
+  - pandas
+  - seaborn
+  - numpy
+  - matplotlib
+  - ipykernel
+  - scikit-learn
+prefix: /home/sharyarmemon/anaconda3/envs/solid-pan-env
