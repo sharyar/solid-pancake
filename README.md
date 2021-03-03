@@ -30,7 +30,12 @@ A small app that does sentiment analysis on a user's Twitter feed.
 ### .end File Details:
 
 The .env file should have the following lines. Replace the XXXXX with your own keys:
-CONSUMER_KEY = 'XXXX'
-CONSUMER_SECRET = 'XXXX'
-ACCESS_TOKEN_KEY = 'XXXX'
-ACCESS_TOKEN_SECRET = 'XXXX'
+
+CONSUMER_KEY = 'XXXX' 
+
+CONSUMER_SECRET = 'XXXX' 
+
+ACCESS_TOKEN_KEY = 'XXXX' 
+
+ACCESS_TOKEN_SECRET = 'XXXX' 
+
