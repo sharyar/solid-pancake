@@ -1,6 +1,6 @@
 
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud 
 import string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
