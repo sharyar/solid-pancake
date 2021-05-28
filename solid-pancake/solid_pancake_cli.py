@@ -83,6 +83,7 @@ def admin_panel():
     if user_option_ == '1':
         tweets_df = pd.read_csv(TWITTER_DF_FILEPATH, header=0, index_col=0, engine='c')
         nlp_model_ = twitter_helper_functions.train_and_save_model(tweets_df['tweet'], tweets_df['label'])
+        print('Training completed!')
     elif user_option_ == '2':
         twitter_df_path = input('Provide a path to the new training data set')
         tweets_df = pd.read_csv(twitter_df_path, header=0, index_col=0, engine='c')

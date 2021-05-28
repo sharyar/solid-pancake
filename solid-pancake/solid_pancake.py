@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, abort, session, jsonify, Blueprint, Flask
+from flask import render_template, request, redirect, url_for, flash, abort, session,jsonify, Blueprint, Flask, send_file
 import json
 import os
 import twitter_helper_functions
@@ -6,7 +6,7 @@ import nltk
 from nltk.corpus import stopwords
 from dotenv import load_dotenv
 import twitter
-
+import re
 # Constants:
 TWITTER_DF_FILEPATH = '../twitter.csv'
 # Declare variables used in the program
@@ -15,7 +15,6 @@ NLP_model = None
 twitter_id = None
 retrieved_tweets = None
 twitter_api = None
-
 
 def initialize_twitter():
     """Starts twitter api by loading all the required key
@@ -46,6 +45,7 @@ def initialize_twitter():
 
 #### Flask APP ####
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret = 'gibbers'
 
 twitter_api = initialize_twitter()
@@ -58,6 +58,9 @@ def home():
 # Functional work to query and process twitter data
 @app.route('/your-twitter', methods=['GET', 'POST'])
 def your_twitter():
+    # Delete old wordcloud file if it exists:
+    delete_wordcloud()
+    
     if request.method == 'POST':
         usernames = {}
         
@@ -74,8 +77,22 @@ def your_twitter():
         # query twitter
         tweets = twitter_helper_functions.get_tweets(twitter_api, requested_name)
         tweets = twitter_helper_functions.convert_tweets_to_list(tweets)
-
-        return render_template('twitter.html', data=len(tweets))
+        tweets = [re.sub(r'https\S+', '', x) for x in tweets]
+        
+        # generate wordcloud
+        twitter_helper_functions.generate_wordcloud_web(tweets, requested_name)
+        
+        path_wordcloud = f'static/images/{requested_name}-wordcloud.png'
+        
+        nlp_model = twitter_helper_functions.load_model()
+        bar_chart = twitter_helper_functions.analyze_and_visualize_tweets_web(tweets, nlp_model)
+        
+        data_dict = {
+            'wc':path_wordcloud,
+            'bc':bar_chart
+        }
+        
+        return render_template('twitter.html', data=data_dict)
     
     else:
         return redirect(url_for("home"))
@@ -94,5 +111,21 @@ def about():
 def stats():
     return render_template('stats.html')
 
+@app.after_request
+def add_header(response):
+    # response.cache_control.no_store = True
+    if 'Cache-Control' not in response.headers:
+        response.headers['Cache-Control'] = 'no-store'
+    return response
+
 if __name__ == '__main__':
     app.run()
+    
+    
+def delete_wordcloud():
+    dir_name = 'static/images'
+    file_list = os.listdir(dir_name)
+    
+    for file in file_list:
+        if file.endswith('.png'):
+            os.remove(os.path.join(dir_name, file))

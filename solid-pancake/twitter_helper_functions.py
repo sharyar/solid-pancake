@@ -1,6 +1,5 @@
-
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud 
+from wordcloud import WordCloud
+from wordcloud import STOPWORDS as stp
 import string
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
@@ -8,6 +7,13 @@ from sklearn.naive_bayes import MultinomialNB
 import pickle
 from joblib import dump, load
 import numpy as np
+import base64
+from io import BytesIO
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 
 # Some of the functions are based on coursera project:
 # https://www.coursera.org/learn/twitter-sentiment-analysis/home/welcome
@@ -197,4 +203,38 @@ Negative Tweets:{negative_tweets}')
     plt.pie(x=[positive_tweets,negative_tweets], labels=['Positive Tweets', 'Negative Tweets'], shadow=False,
             autopct='%1.1f%%', explode=(0, 0.1))
     plt.show()
+    
+def analyze_and_visualize_tweets_web(tweets, nlp_model):
+    vectorized_tweets = vectorize_tweets(tweets)
+    labels = nlp_model.predict(vectorized_tweets)
+    positive_tweets = np.count_nonzero(labels == 0)
+    negative_tweets = np.count_nonzero(labels == 1)
 
+    # plt.pie(x=[positive_tweets,negative_tweets], labels=['Positive Tweets', 'Negative Tweets'], shadow=False,
+    #         autopct='%1.1f%%', explode=(0, 0.1))
+    
+    plt.bar(x=['Positive Tweets', 'Negative Tweets'], height=[positive_tweets, negative_tweets], color=['royalblue', 'lightcoral'])
+    
+    for index, data in enumerate((positive_tweets, negative_tweets)):
+        plt.text(x=index, y=data+1, s=f"{data}", fontdict=dict(fontsize=10))
+    
+    buffer = BytesIO()
+    
+    plt.savefig(buffer, format='png')
+    
+    response = base64.b64encode(buffer.getbuffer()).decode('ascii')
+    
+    # Returns a formatted string that can be used as an output to a webpage 
+    # as an image source
+    return f'data:image/png;base64,{response}'
+   
+    
+    
+def generate_wordcloud_web(tweet_list, username):
+    'Returns a word cloud formatted more appropriately for a web page'
+    tweets_joined = " ".join(tweet_list)
+
+    wc = WordCloud(stopwords=stp).generate(tweets_joined)
+    
+    wc.to_file(f'static/images/{username}-wordcloud.png')
+    
